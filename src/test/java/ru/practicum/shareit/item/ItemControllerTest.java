@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.utility.HttpCustomHeaders;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -55,7 +56,7 @@ class ItemControllerTest {
                         .content(mapper.writeValueAsString(newItem))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(HttpCustomHeaders.USER_ID, "1")
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn();
 
@@ -79,7 +80,7 @@ class ItemControllerTest {
                         .content(mapper.writeValueAsString(newItem))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(HttpCustomHeaders.USER_ID, "1")
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isBadRequest()).andReturn();
     }
@@ -98,7 +99,7 @@ class ItemControllerTest {
                         .content(mapper.writeValueAsString(newItem))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(HttpCustomHeaders.USER_ID, "1")
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isBadRequest()).andReturn();
     }
@@ -116,7 +117,7 @@ class ItemControllerTest {
                         .content(mapper.writeValueAsString(newItem))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(HttpCustomHeaders.USER_ID, "1")
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isBadRequest()).andReturn();
     }
@@ -156,7 +157,7 @@ class ItemControllerTest {
                         .content(mapper.writeValueAsString(expectedItem))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(HttpCustomHeaders.USER_ID, "1")
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn();
 
@@ -191,7 +192,7 @@ class ItemControllerTest {
     @Test
     @SneakyThrows
     void deleteItem_shouldReturnOk() {
-        mockMvc.perform(delete("/items/1").header("X-Sharer-User-Id", "1")).andExpect(status().isOk()).andReturn();
+        mockMvc.perform(delete("/items/1").header(HttpCustomHeaders.USER_ID, "1")).andExpect(status().isOk()).andReturn();
     }
 
     @Test
@@ -239,12 +240,13 @@ class ItemControllerTest {
         MvcResult mvcResult = mockMvc.perform(
                 get("/items")
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .header("X-Sharer-User-Id", "1")
+                        .header(HttpCustomHeaders.USER_ID, "1")
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn();
 
         String responseBodyStr = mvcResult.getResponse().getContentAsString();
-        List<ItemDto> actualItems = mapper.readValue(responseBodyStr, new TypeReference<>(){});
+        List<ItemDto> actualItems = mapper.readValue(responseBodyStr, new TypeReference<>() {
+        });
 
         Assertions.assertIterableEquals(List.of(itemDto), actualItems);
     }
@@ -278,7 +280,8 @@ class ItemControllerTest {
         ).andExpect(status().isOk()).andReturn();
 
         String responseBodyStr = mvcResult.getResponse().getContentAsString();
-        List<ItemDto> actualItems = mapper.readValue(responseBodyStr, new TypeReference<>(){});
+        List<ItemDto> actualItems = mapper.readValue(responseBodyStr, new TypeReference<>() {
+        });
 
         Assertions.assertIterableEquals(List.of(itemDto), actualItems);
     }
@@ -293,7 +296,8 @@ class ItemControllerTest {
         ).andExpect(status().isOk()).andReturn();
 
         String responseBodyStr = mvcResult.getResponse().getContentAsString();
-        List<ItemDto> actualItems = mapper.readValue(responseBodyStr, new TypeReference<>(){});
+        List<ItemDto> actualItems = mapper.readValue(responseBodyStr, new TypeReference<>() {
+        });
 
         Assertions.assertTrue(actualItems.isEmpty());
     }

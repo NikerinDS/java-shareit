@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.utility.HttpCustomHeaders;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<ItemDto> createItem(@Valid @RequestBody ItemDto itemDto,
-                                              @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                              @RequestHeader(HttpCustomHeaders.USER_ID) Long userId) {
         itemDto.setOwnerId(userId);
         log.info("Запрос на создание предмета:{}", itemDto);
         ItemDto createdUser = itemService.createItem(itemDto);
@@ -29,7 +30,7 @@ public class ItemController {
     @PatchMapping("/{id}")
     public ResponseEntity<ItemDto> updateItem(@RequestBody ItemDto itemDto,
                                               @PathVariable Long id,
-                                              @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                              @RequestHeader(HttpCustomHeaders.USER_ID) Long userId) {
         itemDto.setId(id);
         itemDto.setOwnerId(userId);
         log.info("Запрос на обновление предмета:{}", itemDto);
@@ -39,7 +40,7 @@ public class ItemController {
 
     @DeleteMapping("/{id}")
     public void deleteItem(@PathVariable Long id,
-                           @RequestHeader("X-Sharer-User-Id") Long userId) {
+                           @RequestHeader(HttpCustomHeaders.USER_ID) Long userId) {
         log.info("Запрос на удаление предмета с id:{} от пользователя с id:{}", id, userId);
         itemService.deleteItem(id, userId);
     }
@@ -51,7 +52,7 @@ public class ItemController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<ItemDto>> getItemsByOwnerId(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<List<ItemDto>> getItemsByOwnerId(@RequestHeader(HttpCustomHeaders.USER_ID) Long userId) {
         log.info("Запрос на получение списка собственных предметов от пользователя с id:{}", userId);
         return new ResponseEntity<>(itemService.getItemsByOwnerId(userId), HttpStatus.OK);
     }
